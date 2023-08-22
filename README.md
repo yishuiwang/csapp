@@ -28,5 +28,5 @@
   - [ ] Level 3
 - [ ] Proxy Lab
   - [x] BasicCorrectness
-  - [x] Concurrency
-  - [ ] Cache
+  - [x] Concurrency(not prefect)
+  - [x] Cache(not perfect)
