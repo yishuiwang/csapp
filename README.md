@@ -30,3 +30,6 @@
   - [x] BasicCorrectness
   - [x] Concurrency(not prefect)
   - [x] Cache(not perfect)
+- [ ] Cache Lab
+  - [x] Part A
+  - [ ] Part B

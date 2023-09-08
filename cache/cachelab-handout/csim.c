@@ -31,6 +31,7 @@ int verbose = 0; //  0 or 1
 int hit_count = 0;
 int miss_count = 0;
 int eviction_count = 0;
+int s, E, b;
 
 void init_cache(CacheStruct *cache, int sets, int associativity, int block_size);
 void parase_trace_file(FILE *fp);
@@ -43,15 +44,15 @@ int find_LRU(int set_index);
 //  Initialize cache
 void init_cache(CacheStruct *cache, int sets, int associativity, int block_size)
 {
-    cache->b = block_size;
+    cache->b = (1 << block_size);
     cache->E = associativity;
-    cache->s = sets;
+    cache->s = (1 << sets);
 
-    cache->sets = (set *)malloc(sizeof(set) * sets);
-    for (int i = 0; i < (1 << sets); i++)
+    cache->sets = (set *)malloc(sizeof(set) * cache->s);
+    for (int i = 0; i < cache->s; i++)
     {
         cache->sets[i].lines = (line *)malloc(sizeof(line) * associativity);
-        for (int j = 0; j < associativity; j++)
+        for (int j = 0; j < cache->E; j++)
         {
             cache->sets[i].lines[j].valid = 0;
             cache->sets[i].lines[j].tag = -1;
@@ -92,9 +93,9 @@ void parase_trace_file(FILE *fp)
 
 void update_cache(unsigned address, int size)
 {
-    int tag = address >> (cache.s + cache.b);
+    int tag = address >> (s + b);
 
-    int set_index = (address >> cache.b) & ((1 << cache.s) - 1);
+    int set_index = (address >> b) & ((1 << s) - 1);
     // int block_offset = address & block_mask;
     // int block_mask = (1 << cache.b) - 1;
     // printf("\n%d %d %d\n", tag, block_offset, set_index);
@@ -177,7 +178,9 @@ int is_full(int set_index)
     for (int i = 0; i < cache.E; i++)
     {
         if (cache.sets[set_index].lines[i].valid == 0)
+        {
             return i;
+        }
     }
     return -1;
 }
@@ -186,9 +189,6 @@ int main(int argc, char *argv[])
 {
     //./csim-ref -v -s 4 -E 1 -b 4 -t traces/yi.trace
 
-    int s = 0;
-    int E = 0;
-    int b = 0;
     char *trace_file = ""; //  traces/yi.trace
 
     int c;
