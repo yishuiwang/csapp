@@ -297,9 +297,20 @@ int howManyBits(int x)
  *   Max ops: 30
  *   Rating: 4
  */
+// 求2乘一个浮点数
 unsigned floatScale2(unsigned uf)
 {
-  return 2;
+  int exp = (uf >> 23) & 0xFF;
+
+  if (exp == 0xFF)
+    return uf;
+
+  // 如果exp为0，那么就是非规格化数，直接左移一位即可
+  if (exp == 0)
+    return (uf & 0x7FFFFF) << 1 | (uf & 0x80000000);
+
+  // 指数加1
+  return uf + (1 << 23);
 }
 /*
  * floatFloat2Int - Return bit-level equivalent of expression (int) f
@@ -313,9 +324,29 @@ unsigned floatScale2(unsigned uf)
  *   Max ops: 30
  *   Rating: 4
  */
+// 将浮点数转换为整数
 int floatFloat2Int(unsigned uf)
 {
-  return 2;
+  int exp = (uf >> 23) & 0xFF;
+
+  int sign = uf >> 31;
+
+  int E = exp - 127;
+
+  if (E < 0)
+    return 0;
+
+  if (E > 30)
+    return 0x80000000u;
+
+  int frac = 1;
+
+  int ans = frac << E;
+
+  if (sign)
+    ans = ~ans + 1;
+
+  return ans;
 }
 /*
  * floatPower2 - Return bit-level equivalent of the expression 2.0^x
@@ -330,7 +361,20 @@ int floatFloat2Int(unsigned uf)
  *   Max ops: 30
  *   Rating: 4
  */
+// 求2的x次方
 unsigned floatPower2(int x)
 {
-  return 2;
+
+  if (!x)
+    return 0x3F800000;
+
+  if (x < -149)
+    return 0;
+
+  if (x > 127)
+    return 0x7F800000;
+
+  int exp = x + 127;
+
+  return exp << 23;
 }
