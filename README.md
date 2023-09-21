@@ -1,20 +1,7 @@
 # csapp
 
-- [ ] Data Lab
+- [x] Data Lab
 
-  - [x] bitXor
-    tmin
-    isTmax
-    allOddBits
-    negate
-    isAsciiDigit
-    conditional
-    isLessOrEqual
-    logicalNeg
-    howManyBits
-  - [ ] floatScale2
-    floatFloat2Int
-    floatPower2
 - [ ] Bomb Lab
   - [x] Phase_1
   - [x] Phase_2
